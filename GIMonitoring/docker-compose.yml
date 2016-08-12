@@ -1,0 +1,23 @@
+version: '2'
+services:
+  influxdb:
+    image: influxdb:0.13-alpine
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+    environment:
+      PRE_CREATE_DB: timedb
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    links:
+      - influxdb
+  statsd:
+    build: ./statsd
+    image: statsd
+    ports:
+      - "8125/udp:8125/udp"
+      - "8126:8126"
+    links:
+      - influxdb
